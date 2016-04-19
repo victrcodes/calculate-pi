@@ -2,15 +2,11 @@ import scala.concurrent.duration._
 
 import akka.actor._
 import akka.routing.RoundRobinRouter
-
 import com.typesafe.config.ConfigFactory
-
 
 object Pi extends App {
 
-
 	calculate(workerNumber = 8, elementNumber = 10000, messageNumber = 10000)
-
 
 	/**
 	 * Calculate Pi
@@ -35,12 +31,10 @@ object Pi extends App {
 
 	}
 
-
 	sealed trait PiMessage
 	case class Work(start: Int, elementNumber: Int) extends PiMessage
 	case class Result(value: Double) extends PiMessage
 	case class PiApprox(pi: Double, duration: Duration)
-
 
 	/**
 	 * Worker actor
@@ -59,29 +53,9 @@ object Pi extends App {
 				calc(i + 1, max, acc + 4.0 * (1 - (i % 2) * 2) / (2 * i + 1))
 		}
 
-		def calculatePiFor(start: Int, elementNumber: Int): Double = {
+		def calculatePiFor(start: Int, elementNumber: Int): Double = calc(start, start + elementNumber, 0.0)
 
-			//Imperative approach, relatively fast
-			/*
-			var acc = 0.0
-			for (i <- start until (start + elementNumber))
-				acc += 4.0 * (1 - (i % 2) * 2) / (2 * i + 1)
-			acc
-			*/
-
-			//foldLeft functional immutable approach - unfortunatelly 4 times slower than for loop
-			/*
-			(start until (start + elementNumber)).foldLeft(0.0)({
-				(d, i) => d + 4.0 * (1 - (i % 2) * 2) / (2 * i + 1)
-			})
-			*/
-			
-			//Winner - tail recursion, the fastest (up to 40% faster than for loop)
-			calc(start, start + elementNumber, 0.0)
-
-		}
 	}
-
 
 	/**
 	 * Master actor
@@ -123,7 +97,6 @@ object Pi extends App {
 
 	}
 
-
 	/**
 	 * Listener actor
 	 */
@@ -137,8 +110,6 @@ object Pi extends App {
 
 	}
 
-
 	case object Calculate extends PiMessage
-
 
 }
