@@ -1,5 +1,8 @@
-###Calculate Pi Approximation
+Calculate Pi Approximation
+==========================
 
-Pi approximation calculation using Scala and Akka. Fully immutable, functional and optimized approach.
+Pi approximation calculation using Scala and Akka.
 
 Run with SBT (http://scala-sbt.org)
+
+Run command: `sbt run`
